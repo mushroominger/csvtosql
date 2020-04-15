@@ -36,7 +36,7 @@ public class TableMaker {
 
     public static void main(String[] args) {
 
-        if(args.length != 1){
+        if (args.length != 1){
             System.out.println("パラメータの数が違います");
             System.exit(1);
         }
@@ -44,7 +44,7 @@ public class TableMaker {
         try {
             String path = System.getProperty("user.dir").replace("\\", "/");
             File inFile = new File(path + "/" + args[0]);
-            if(!inFile.exists()) {
+            if (!inFile.exists()) {
                 System.out.println("File is not exist");
                 return;
             }
