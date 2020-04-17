@@ -89,12 +89,14 @@ public class TableMaker {
         ArrayList<String> outlet_array = new ArrayList<String>();
         ArrayList<String> primary_keys = new ArrayList<String>();
         ArrayList<String> foreign_keys = new ArrayList<String>();
+        int skip_num = 1;
 
         if (inlet_array.get(table_set).get(table_replace).toLowerCase().equals("yes")) {
-            outlet_array.add("DROP TABLE IF EXISTS " + inlet_array.get(table_set).get(table_name));
+            outlet_array.add("DROP TABLE IF EXISTS " + inlet_array.get(table_set).get(table_name) + ";\r\n");
+            skip_num = 2;
         }
 
-        outlet_array.add("CREATE TABLE " + inlet_array.get(table_set).get(table_name));
+        outlet_array.add("CREATE TABLE " + inlet_array.get(table_set).get(table_name) + "\r\n");
 
         for (int i=detail_row_start; i<inlet_array.size(); i++) {
             ArrayList<String> tmp = new ArrayList<String>();
@@ -162,7 +164,7 @@ public class TableMaker {
         }
 
         // 行末の処理
-        for (int i=0; i<outlet_array.size(); i++) {
+        for (int i=skip_num; i<outlet_array.size(); i++) {
             outlet_array.set(i, outlet_array.get(i) + (i + 1 == outlet_array.size() ? ";\r\n" : ",\r\n"));
         }
 
