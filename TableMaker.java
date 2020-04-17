@@ -1,3 +1,4 @@
+
 import java.util.*;
 import java.io.*;
 
@@ -35,50 +36,44 @@ public class TableMaker {
     ));
 
     public static void main(String[] args) {
+        ArrayList<String> paths = path_getter();
 
-        if (args.length != 1){
-            System.out.println("パラメータの数が違います");
-            System.exit(1);
-        }
+        for (String path : paths) {
 
-        try {
-            String path = System.getProperty("user.dir").replace("\\", "/");
-            File inFile = new File(path + "/" + args[0]);
-            if (!inFile.exists()) {
-                System.out.println("File is not exist");
-                return;
+            try {
+                File inFile = new File(path);
+
+                FileReader fileReader = new FileReader(inFile);
+                BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+                ArrayList<ArrayList<String>> inlet_outer = new ArrayList<ArrayList<String>>();
+
+                String data = new String();
+                while ((data = bufferedReader.readLine()) != null) {
+                    ArrayList<String> inlet_inner = new ArrayList<String>(Arrays.asList(data.split(",")));
+                    inlet_outer.add(inlet_inner);
+                }
+
+                bufferedReader.close();
+                fileReader.close();
+
+                ArrayList<String> outlet_al = converter(inlet_outer);
+
+                File outFile = new File(path.replace(".csv", ".sql"));
+                FileWriter fileWriter = new FileWriter(outFile);
+                BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+                for (String str : outlet_al) {
+                    bufferedWriter.write(str);
+                }
+
+                bufferedWriter.close();
+                fileWriter.close();
+
+                System.out.println("変換に成功しました");
+
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-            FileReader fileReader = new FileReader(inFile);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-            ArrayList<ArrayList<String>> inlet_outer = new ArrayList<ArrayList<String>>();
-
-            String data = new String();
-            while ((data = bufferedReader.readLine()) != null) {
-                ArrayList<String> inlet_inner = new ArrayList<String>(Arrays.asList(data.split(",")));
-                inlet_outer.add(inlet_inner);
-            }
-
-            bufferedReader.close();
-            fileReader.close();
-
-            ArrayList<String> outlet_al = converter(inlet_outer);
-
-            File outFile = new File(path + "/" + args[0].replace("csv", "sql"));
-            FileWriter fileWriter = new FileWriter(outFile);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            for (String str : outlet_al) {
-                bufferedWriter.write(str);
-            }
-
-            bufferedWriter.close();
-            fileWriter.close();
-
-            System.out.println("変換に成功しました");
-
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -224,5 +219,37 @@ public class TableMaker {
         } else {
             return "FOREIGN KEY " + foreign_str + " REFERENCES " + tbl_str + "(" + col_str + ")";
         }
+    }
+
+
+    private static ArrayList<String> path_getter() {
+        System.out.println("変換したいファイルのパスを入力してください \\qで入力終了");
+        ArrayList<String> fpal = new ArrayList<>();
+        String line = new String();
+
+        Scanner scan = new Scanner(System.in);
+        while (scan.hasNext()) {
+            line = scan.next();
+            if (line.equals("\\q")) {
+                System.out.println("入力を終了します");
+                break;
+            } else {
+                try {
+                    String tmp_path = new File(line).getCanonicalPath();
+                    File inFile = new File(tmp_path);
+                    if (!inFile.exists()) {
+                        System.out.println("ファイルが見つかりません");
+                        continue;
+                    } else {
+                        fpal.add(inFile.toString());
+                        System.out.println(fpal);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        scan.close();
+        return fpal;
     }
 }
