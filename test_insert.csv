@@ -1,0 +1,6 @@
+table_name,test,,,,
+column_type,date,varchar,varchar,int,int
+column_names,dates,item,remarks,receives,pays
+,20200405,H”ï,‰ÔŒ©,0,5000
+,20200406,ˆã—Ã”ï,’Ê‰@”ï,0,1800
+,20200325,‹‹—¿,3Œ•ª‹‹—¿,160000,0
