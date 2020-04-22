@@ -21,7 +21,7 @@ public class CsvToInsert {
     ));
 
     public static void main(String[] args) {
-        ArrayList<String> paths = path_getter();
+        ArrayList<String> paths = xx();
 
         for (String path : paths) {
 
@@ -113,6 +113,64 @@ public class CsvToInsert {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
+        }
+        scan.close();
+        return fpal;
+    }
+
+    private static ArrayList<String> xx() {
+        System.out.println("test drive");
+        ArrayList<String> fpal = new ArrayList<>();
+        String line = new String();
+
+        Scanner scan = new Scanner(System.in);
+
+        while (scan.hasNext()) {
+            line = scan.next();
+            if (line.equals("\\q")) {
+                System.out.println("入力を終了します");
+                break;
+            } else if (line.indexOf(".csv") != -1) {
+                System.out.println("ファイルかも");
+                System.out.println(line);
+                try {
+                    String tmp_path = new File(line).getCanonicalPath();
+                    File inFile = new File(tmp_path);
+                    if (!inFile.exists()) {
+                        System.out.println("ファイルが見つかりません");
+                        continue;
+                    } else {
+                        fpal.add(inFile.toString());
+                        System.out.println(fpal);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println("フォルダかも");
+                System.out.println(line);
+                File dir = new File(line);
+                File[] list = dir.listFiles();
+
+                if (list != null) {
+                    for (File item : list) {
+                        try {
+                            String tmp_file = item.getCanonicalPath();
+                            if (tmp_file.indexOf(".csv") != -1) {
+                                System.out.println(tmp_file);
+                                fpal.add(tmp_file);
+                            } else {
+                                System.out.println("csvファイルではありません");
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } else {
+                    System.out.println("空っぽです");
+                }
+                break;
             }
         }
         scan.close();
